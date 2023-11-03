@@ -28,7 +28,7 @@ pip install pandas numpy matplotlib seaborn scikit-learn pandas-profiling
 Instructions
 Follow the step-by-step instructions below to use the provided Python script:
 
-## Step 1: Data Preprocessing
+## :arrow_down: Step 1: Data Preprocessing
 Import the necessary libraries by running the script.
 Load the dataset by specifying the file path in the data = pd.read_csv() line. Make sure to replace the file path with your dataset's location.
 Remove ambiguous values and missing data from the dataset, specifically in the 'age' and 'month' columns.
@@ -39,7 +39,7 @@ Replace 'unknown' values in the 'job' and 'education' columns with 'other'.
 Perform unit conversion on the 'duration' column to represent call duration in minutes.
 Convert month names in the 'month' column to corresponding numbers.
 
-## Step 2: Exploratory Data Analysis (EDA)
+## :chart_with_downwards_trend: Step 2: Exploratory Data Analysis (EDA)
 Compute basic summary statistics for numerical columns ('age' and 'balance') and display the distribution of these variables.
 Analyze and visualize the relationship between 'duration' and 'campaign'.
 Visualize the distribution of the target variable 'response'.
@@ -50,16 +50,16 @@ Analyze subscription rates by balance level.
 Examine the response rate by job category.
 
 
-## Step 3: Data Preparation for Binary Classification
+## :anchor: Step 3: Data Preparation for Binary Classification
 Create a clean dataset for binary classification, including only relevant columns and encoding target variable 'response' to binary values.
 Split the dataset into features (X) and the target variable (Y).
 
-## Step 4: Model Building and Evaluation
+## :snail: Step 4: Model Building and Evaluation
 Train binary classification models using Logistic Regression, Naive Bayes, K-Nearest Neighbors (KNN), Random Forest, Decision Tree, and LightGBM.
 Evaluate the model performance by calculating accuracy and generating confusion matrices.
 Make predictions for a new data point using the trained models and display the response.
 
-## Running the Script
+## :spider_web: Running the Script
 To run the Python script, execute the code cells one by one in a Jupyter Notebook or a compatible code editor. Ensure that you have the necessary libraries installed in your Python environment.
 
 ## Conclusion
