@@ -11,7 +11,7 @@ To run the script and reproduce the analysis, you will need the following:
 Python environment with necessary libraries (pandas, numpy, matplotlib, seaborn, scikit-learn, lightgbm).
 A Jupyter Notebook or a code editor to execute the Python script.
 
-## Python Environment Setup
+## :spiral_notepad: Python Environment Setup
 Ensure you have a Python environment set up with the necessary libraries installed. You can create a Python environment using a tool like [conda](https://docs.conda.io/en/latest/), which allows you to manage dependencies efficiently. Here's an example of creating a conda environment:
 
 ```bash
