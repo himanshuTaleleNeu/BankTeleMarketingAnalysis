@@ -1,36 +1,41 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import sys
 sys.executable
-import numpy as np
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from ydata_profiling import ProfileReport
 from pandas_profiling import ProfileReport
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
-from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
+import lightgbm as lgb
+from lightgbm import LGBMClassifier
 
 
-# In[2]:
+# In[ ]:
 
 
 # importing the dataset
 data = pd.read_csv('/Users/himanshutalele/Desktop/Self/Bank_Campaign_Data/Bank_Marketing.csv', delimiter=';')
 display(data)
+#unique_jobs = data['education'].unique()
+#print(unique_jobs)
 
 
-# In[3]:
+# In[ ]:
 
 
 df = pd.DataFrame(data)
@@ -41,7 +46,7 @@ data.info()
 # 
 # Now we will ompute basic summary statistics for numerical variables, such as mean, median, and standard deviation and will examine the distribution of age and balance to understand the data.
 
-# In[4]:
+# In[ ]:
 
 
 #Compute basic summary statistics
@@ -101,7 +106,7 @@ plt.show()
 # 
 # Here we will handle missing data by imputing or removing missing values, and will address any outliers that may affect the analysis.
 
-# In[5]:
+# In[ ]:
 
 
 data.info()
@@ -111,28 +116,28 @@ data.info()
 
 # ### 1. Age 
 
-# In[6]:
+# In[ ]:
 
 
 #count the missing values in age column.
 df.age.isnull().sum()
 
 
-# In[7]:
+# In[ ]:
 
 
 #pring the shape of dataframe inp0
 df.shape
 
 
-# In[8]:
+# In[ ]:
 
 
 #calculate the percentage of missing values in age column.
 float(100.0*20/45211)
 
 
-# In[9]:
+# In[ ]:
 
 
 #drop the records with age missing in df and copy in new_df dataframe.
@@ -144,21 +149,21 @@ new_df
 
 # ### 2. Month 
 
-# In[10]:
+# In[ ]:
 
 
 #count the missing values in month column in new_df.
 new_df.month.isnull().sum()
 
 
-# In[11]:
+# In[ ]:
 
 
 #print the percentage of each month in the data frame new_df.
 new_df.month.value_counts(normalize=True)
 
 
-# In[12]:
+# In[ ]:
 
 
 #find the mode of month in new_df
@@ -166,7 +171,7 @@ month_mode = new_df.month.mode()[0]
 month_mode
 
 
-# In[13]:
+# In[ ]:
 
 
 # fill the missing values with mode value of month in new_df.
@@ -174,7 +179,7 @@ new_df.month.fillna(month_mode, inplace=True)
 new_df.month.value_counts(normalize=True)
 
 
-# In[14]:
+# In[ ]:
 
 
 #let's see the null values in the month column.
@@ -184,7 +189,7 @@ new_df.month.isnull().sum()
 # ### 3.  y
 #  first we will rename the y to response for better understanding
 
-# In[15]:
+# In[ ]:
 
 
 nw_df = new_df.copy()
@@ -195,7 +200,7 @@ nw_df = nw_df.rename(columns={'y': 'response'})
 
 # - So, we have removed missing values from column Age and Month. Also, in the next step missing values will be reevaluated. 
 
-# In[16]:
+# In[ ]:
 
 
 #calculate the missing values in each column of data frame: nw_df.
@@ -204,13 +209,13 @@ nw_df.isnull().sum()
 
 # - As we can see after importing the dataset, in pdays column there are -1 values, so we will replace those -1 with NaN
 
-# In[17]:
+# In[ ]:
 
 
 nw_df.pdays.describe()
 
 
-# In[18]:
+# In[ ]:
 
 
 nw_df['pdays'] = nw_df['pdays'].mask(nw_df['pdays'] < 0, pd.NA)
@@ -219,14 +224,14 @@ nw_df.pdays.describe()
 
 # - Last step : to remove the 'other' from poutcome, job, education 
 
-# In[19]:
+# In[ ]:
 
 
 # Here we will remove the rows which column 'poutcome' contains 'other'
 nw_df = nw_df[nw_df['poutcome'] != 'other']
 
 
-# In[20]:
+# In[ ]:
 
 
 # Here we will copy the data in new data frame and will replace 'unknown' with 'other' in the 'job' and 'education' columns
@@ -245,21 +250,21 @@ new_df1
 # 2. will change unit conversion in duration column from seconds to min 
 # 3. will change the month column from words to number.
 
-# In[21]:
+# In[ ]:
 
 
 # 1. will drop the conact column and will save in new dataframe i.e n_df1
 n_df1 = new_df1.drop('contact', axis=1)
 
 
-# In[22]:
+# In[ ]:
 
 
 #2. Unit conversion in duration column from seconds to min 
 n_df1['duration'] = n_df1['duration'].apply(lambda n:n/60).round(2)
 
 
-# In[23]:
+# In[ ]:
 
 
 # 3. Month column from words to number
@@ -277,7 +282,7 @@ n_df1["month"] = n_df1["month"].map(mth)
 #  
 # # 1. Age
 
-# In[24]:
+# In[ ]:
 
 
 n_df1.age.describe()
@@ -285,7 +290,7 @@ n_df1.age.describe()
 
 # # Histogram
 
-# In[25]:
+# In[ ]:
 
 
 n_df1.age.plot.hist()
@@ -294,7 +299,7 @@ plt.show()
 
 # # Boxplot 
 
-# In[26]:
+# In[ ]:
 
 
 sns.boxplot(n_df1.age)
@@ -303,13 +308,13 @@ plt.show()
 
 # # 2. Balance
 
-# In[27]:
+# In[ ]:
 
 
 n_df1.balance.describe()
 
 
-# In[28]:
+# In[ ]:
 
 
 plt.figure(figsize=[8,2])
@@ -319,19 +324,19 @@ plt.show()
 
 # Now we will use Quantiles to divide a dataset into equal parts, ehich will provide  us the insights into the distribution of data. 
 
-# In[29]:
+# In[ ]:
 
 
 n_df1.balance.quantile([0.5,0.7,0.9,0.95,0.99])
 
 
-# In[30]:
+# In[ ]:
 
 
 profile = ProfileReport(n_df1, title='Data Profiling Report')
 
 
-# In[31]:
+# In[ ]:
 
 
 profile
@@ -341,7 +346,7 @@ profile
 
 # # 1. We will visualize the distribution of 'duration' & 'campaign
 
-# In[32]:
+# In[ ]:
 
 
 duration_distance_plot = n_df1[['duration','campaign']].plot(kind = 'box', color= 'red',
@@ -358,7 +363,7 @@ plt.show()
 
 # # 2. Relationship between Duration & Campaign
 
-# In[33]:
+# In[ ]:
 
 
 # Create a scatter plot with Seaborn
@@ -392,13 +397,13 @@ plt.show()
 
 # # 3. Response of target variable
 
-# In[34]:
+# In[ ]:
 
 
 n_df1.response.value_counts(normalize=True)
 
 
-# In[35]:
+# In[ ]:
 
 
 # Count the values and create a pie chart with percentage labels
@@ -413,7 +418,7 @@ plt.show()
 
 # # 4. Education 
 
-# In[36]:
+# In[ ]:
 
 
 # values and a pie chart with percentage labels
@@ -425,7 +430,7 @@ plt.show()
 
 # # 5. Visualization between age, balance and duration
 
-# In[37]:
+# In[ ]:
 
 
 # pairplot with numerical values on the diagonal
@@ -439,7 +444,7 @@ plt.show()
 
 # - Heatmap for better visualization
 
-# In[38]:
+# In[ ]:
 
 
 correlation_matrix = n_df1[["balance", "age", "duration"]].corr()
@@ -454,7 +459,7 @@ plt.show()
 
 # # 6. Marital vs response rate
 
-# In[39]:
+# In[ ]:
 
 
 # Convert the binary 'response' column to a numerical format (0 for 'no', 1 for 'yes')
@@ -471,7 +476,7 @@ plt.show()
 
 # # 7. Education vs poutcome vs response
 
-# In[40]:
+# In[ ]:
 
 
 custom_palette = sns.color_palette("PRGn")
@@ -491,7 +496,7 @@ plt.show()
 
 # # 8. Education vs marital vs response
 
-# In[41]:
+# In[ ]:
 
 
 # here we will create a pivot table for response_numeric by education and marital status
@@ -511,25 +516,25 @@ plt.show()
 
 # # Correlation Matrix
 
-# In[42]:
+# In[ ]:
 
 
 # relevant columns for correlation
-selected_columns = ['age', 'balance', 'duration', 'campaign', 'month', 'previous', 'response']
-corr_data = n_df1[selected_columns]
+#selected_columns = ['age', 'balance', 'duration', 'campaign', 'month', 'previous', 'response']
+#corr_data = n_df1[selected_columns]
 
 # correlation matrix
-corr_matrix = corr_data.corr()
+#corr_matrix = corr_data.corr()
 
 #  heatmap with annotations
-plt.figure(figsize=(8, 6))
-cor_plot = sns.heatmap(corr_matrix, annot=True, cmap='PiYG', linewidths=0.2, annot_kws={'size': 10})
+#plt.figure(figsize=(8, 6))
+#cor_plot = sns.heatmap(corr_matrix, annot=True, cmap='PiYG', linewidths=0.2, annot_kws={'size': 10})
 
-plt.xlabel('Features', fontsize=12)
-plt.ylabel('Features', fontsize=12)
-plt.title('Correlation Matrix', fontsize=14)
+#plt.xlabel('Features', fontsize=12)
+#plt.ylabel('Features', fontsize=12)
+#plt.title('Correlation Matrix', fontsize=14)
 
-plt.show()
+#plt.show()
 
 
 # Above we can see that the correlation matrix does not indicate any significant relationships between age, balance, duration, and campaign variables.
@@ -538,7 +543,7 @@ plt.show()
 
 # ### 1.  Subscription and contact rate by age
 
-# In[43]:
+# In[ ]:
 
 
 # creating the age groups
@@ -570,7 +575,7 @@ plt.show()
 
 # ### 2. Subscription by balance level
 
-# In[44]:
+# In[ ]:
 
 
 import pandas as pd
@@ -601,7 +606,7 @@ plt.show()
 
 # ### 3. Subscription by Job
 
-# In[45]:
+# In[ ]:
 
 
 import pandas as pd
@@ -627,7 +632,7 @@ for rect, label in zip(job_plot.patches, subscription_rate.round(1).astype(str))
 plt.show()
 
 
-# In[46]:
+# In[ ]:
 
 
 # Save the DataFrame to a CSV file
@@ -644,7 +649,7 @@ n_df1.to_csv(file_path, sep=delimiter, index=False)
 # 
 # ###### Feature Engineering
 
-# In[47]:
+# In[ ]:
 
 
 data = pd.read_csv('/Users/himanshutalele/Desktop/Self/Bank_Campaign_Data/output_data.csv', delimiter=';')
@@ -652,7 +657,7 @@ display(data)
 data.info()
 
 
-# In[48]:
+# In[ ]:
 
 
 data.isnull().sum()
@@ -661,7 +666,7 @@ data.isnull().sum()
 # ##### Now we will classify which variables are related to customer and will proceed with those varibales. Also we will drop few columns which we dont need for further analysis.
 # ##### So in the next step we will figure out the columns names from the cleaned dataset which is 'output_data'.
 
-# In[49]:
+# In[ ]:
 
 
 data.columns
@@ -677,7 +682,7 @@ data.columns
 # - balance
 # - loan
 
-# In[50]:
+# In[ ]:
 
 
 # columns to keep
@@ -690,7 +695,7 @@ df
 
 # Here, out of 7 columns 5 coumns contains categorical values and from those 3 contains binary values. so in the next step before proceeding train-test we will create a new Dataframe and will distribute job and education and also for binary values we will defines numberical values i.e Yes - 1 and for No - 0 
 
-# In[51]:
+# In[ ]:
 
 
 # columns to one-hot encode
@@ -701,9 +706,22 @@ concat_df = pd.concat([df, pd.get_dummies(df[columns_to_encode])], axis=1)
 
 # Now we will drop the original categorical columns after creating dummy variables
 concat_df.drop(columns_to_encode, axis=1, inplace=True)
+concat_df
 
 
-# In[52]:
+# In[ ]:
+
+
+binary_encoded_columns = ['job_admin.', 'job_blue-collar', 'job_entrepreneur', 'job_housemaid', 'job_management',
+                          'job_technician', 'job_unknown', 'job_retired', 'job_services', 'job_self-employed',
+                          'job_unemployed', 'job_student', 'education_primary', 'education_secondary',
+                          'education_tertiary', 'education_unknown']
+
+# Convert 'False' and 'True' to 0 and 1 in the specified columns
+concat_df[binary_encoded_columns] = concat_df[binary_encoded_columns].astype(int)
+
+
+# In[ ]:
 
 
 # List of columns to convert to binary
@@ -713,7 +731,7 @@ binary_columns = ['housing', 'default', 'loan']
 concat_df[binary_columns] = concat_df[binary_columns].apply(lambda x: x.map({'yes': 1, 'no': 0}))
 
 
-# In[53]:
+# In[ ]:
 
 
 concat_df.shape
@@ -723,19 +741,19 @@ concat_df.shape
 # 
 # In this step, we create a clean dataset for binary classification. We start by copying the concatenated data, and then we will map the target variable 'response'- form (original dataset) to binary values within the DataFrame. The target variable 'response' will be assigned 1 if 'response' is 'yes', and 0 if 'response' is 'no'. This encoding is necessary for training binary classification models.
 
-# In[54]:
+# In[ ]:
 
 
 print(data['response'].unique())
 
 
-# In[55]:
+# In[ ]:
 
 
 data['response'] = data['response'].str.strip()
 
 
-# In[56]:
+# In[ ]:
 
 
 response_df = pd.DataFrame(data['response'])
@@ -743,7 +761,7 @@ response_df = response_df['response'].map({'yes': 1, 'no': 0})
 binary_classification_DF = pd.merge(concat_df, response_df, left_index=True, right_index=True)
 
 
-# In[57]:
+# In[ ]:
 
 
 binary_classification_DF.info()
@@ -753,7 +771,7 @@ binary_classification_DF.info()
 
 # Now in the feature selection we will be splitting binary_classification_DF  into features (X) and the target variable (Y). Which will extracts all columns except the last one for the feature matrix X and extracts the last column for the target variable Y.
 
-# In[58]:
+# In[ ]:
 
 
 binary_classification_DF = binary_classification_DF[-binary_classification_DF.age.isnull()].copy()
@@ -761,7 +779,7 @@ binary_classification_DF
 #binary_classification_DF.isnull().sum()
 
 
-# In[59]:
+# In[ ]:
 
 
 array = binary_classification_DF.values
@@ -769,7 +787,7 @@ X = array[:,0:-1] # except last column
 Y = array[:,-1]
 
 
-# In[60]:
+# In[ ]:
 
 
 # split the data into training (70) and testing (30) set
@@ -777,21 +795,21 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.30, random
 #binary_classification_DF
 
 
-# In[69]:
+# In[ ]:
 
 
 # Create a DataFrame with new data
 new_data = pd.DataFrame({
-    'age': [43],
+    'age': [65],
     'default': [1],
-    'balance': [8732],
+    'balance': [29999],
     'housing': [0],
     'loan': [1],
     'job_admin.': [0],
-    'job_blue-collar': [0],
+    'job_blue-collar': [1],
     'job_entrepreneur': [0],
     'job_housemaid': [0],
-    'job_management': [1],
+    'job_management': [0],
     'job_retired': [0],
     'job_self-employed': [0],
     'job_services': [0],
@@ -799,14 +817,14 @@ new_data = pd.DataFrame({
     'job_technician': [0],
     'job_unemployed': [0],
     'job_unknown': [0],
-    'education_primary': [0],
+    'education_primary': [1],
     'education_secondary': [0],
-    'education_tertiary': [1],
+    'education_tertiary': [0],
     'education_unknown': [0]
 })
 
 
-# In[70]:
+# In[ ]:
 
 
 # will train the logistic regression model
@@ -817,25 +835,13 @@ logistic_regression.fit(X_train, y_train)
 y_pred = logistic_regression.predict(X_test)
 
 # evaluation results
-accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
+accuracy_logistic_regression = accuracy_score(y_test, y_pred)
 
-# calculate ROC AUC score
-y_prob = logistic_regression.predict_proba(X_test)[:, 1]
-roc_auc = roc_auc_score(y_test, y_prob)
 conf_matrix = confusion_matrix(y_test, y_pred)
 
-#print("Accuracy:", accuracy)
-#print("F1 Score:", f1)
-#print("Precision:", precision)
-#print("Recall:", recall)
-#print("ROC AUC Score:", roc_auc)
-
 results_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC"],
-    "Results": [accuracy, f1, precision, recall, roc_auc]
+    "Metric": ["Accuracy"],
+    "Results": [accuracy_logistic_regression]
 })
 
 # results
@@ -856,42 +862,7 @@ predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 print("\nResponce:", predicted_result[0])
 
 
-# In[63]:
-
-
-svm_classifier = SVC(probability=True) 
-svm_classifier.fit(X_train, y_train)
-
-# predictions on the test set
-y_pred = svm_classifier.predict(X_test)
-
-# evaluation results
-accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-
-# calculate ROC AUC score
-y_prob = svm_classifier.predict_proba(X_test)[:, 1]
-roc_auc = roc_auc_score(y_test, y_prob)
-conf_matrix = confusion_matrix(y_test, y_pred)
-
-metrics_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC Score"],
-    "Value": [accuracy, f1, precision, recall, roc_auc]
-})
-
-print(metrics_df)
-
-plt.figure(figsize=(4, 3))
-sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=['Predicted No', 'Predicted Yes'], yticklabels=['Actual No', 'Actual Yes'])
-plt.xlabel("Predicted")
-plt.ylabel("Actual")
-plt.title("Confusion Matrix")
-plt.show()
-
-
-# In[64]:
+# In[ ]:
 
 
 naive_bayes = GaussianNB()
@@ -901,19 +872,13 @@ naive_bayes.fit(X_train, y_train)
 y_pred = naive_bayes.predict(X_test)
 
 # evaluation results
-accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
+accuracy_naive_bayes = accuracy_score(y_test, y_pred)
 
-# calculate ROC AUC score
-y_prob = naive_bayes.predict_proba(X_test)[:, 1]
-roc_auc = roc_auc_score(y_test, y_prob)
 conf_matrix = confusion_matrix(y_test, y_pred)
 
 metrics_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC Score"],
-    "Value": [accuracy, f1, precision, recall, roc_auc]
+    "Metric": ["Accuracy"],
+    "Value": [accuracy_naive_bayes]
 })
 
 print(metrics_df)
@@ -925,8 +890,13 @@ plt.ylabel("Actual")
 plt.title("Confusion Matrix")
 plt.show()
 
+predicted_result = naive_bayes.predict(new_data)
+predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 
-# In[65]:
+print("\nResponce:", predicted_result[0])
+
+
+# In[ ]:
 
 
 # will train the KNeighborsClassifier model
@@ -937,18 +907,11 @@ KNN.fit(X_train, y_train)
 y_pred = KNN.predict(X_test)
 
 # evaluation results
-accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-
-# calculate ROC AUC score
-y_prob = KNN.predict_proba(X_test)[:, 1]
-roc_auc = roc_auc_score(y_test, y_prob)
+accuracy_KNN = accuracy_score(y_test, y_pred)
 
 results_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC"],
-    "Results": [accuracy, f1, precision, recall, roc_auc]
+    "Metric": ["Accuracy"],
+    "Results": [accuracy_KNN]
 })
 print(results_df)
 
@@ -960,8 +923,13 @@ plt.ylabel("Actual")
 plt.title("Confusion Matrix")
 plt.show()
 
+predicted_result = KNN.predict(new_data)
+predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 
-# In[66]:
+print("\nResponce:", predicted_result[0])
+
+
+# In[ ]:
 
 
 # will train the RandomForestClassifier model
@@ -973,32 +941,30 @@ y_pred_rf = random_forest.predict(X_test)
 
 # evaluation results
 accuracy_rf = accuracy_score(y_test, y_pred_rf)
-f1_rf = f1_score(y_test, y_pred_rf)
-precision_rf = precision_score(y_test, y_pred_rf)
-recall_rf = recall_score(y_test, y_pred_rf)
 
-# calculate ROC AUC score
-y_prob_rf = random_forest.predict_proba(X_test)[:, 1]
-roc_auc_rf = roc_auc_score(y_test, y_prob_rf)
-conf_matrix_rf = confusion_matrix(y_test, y_pred_rf)
 
 metrics_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC Score"],
-    "Value": [accuracy, f1, precision, recall, roc_auc]
+    "Metric": ["Accuracy"],
+    "Value": [accuracy_rf]
 })
 
 print(metrics_df)
 
 # confusion matrix
 plt.figure(figsize=(4, 3))
-sns.heatmap(conf_matrix_rf, annot=True, fmt="d", cmap="Blues", xticklabels=['Predicted No', 'Predicted Yes'], yticklabels=['Actual No', 'Actual Yes'])
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=['Predicted No', 'Predicted Yes'], yticklabels=['Actual No', 'Actual Yes'])
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.title("Confusion Matrix (Random Forest)")
 plt.show()
 
+predicted_result = KNN.predict(new_data)
+predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 
-# In[67]:
+print("\nResponce:", predicted_result[0])
+
+
+# In[ ]:
 
 
 # will train the decision tree model
@@ -1010,18 +976,12 @@ y_pred_tree = decision_tree.predict(X_test)
 
 # evaluation results
 accuracy_tree = accuracy_score(y_test, y_pred_tree)
-f1 = f1_score(y_test, y_pred_tree)
-precision = precision_score(y_test, y_pred_tree)
-recall = recall_score(y_test, y_pred_tree)
 
-# calculate ROC AUC score
-y_prob_tree = decision_tree.predict_proba(X_test)[:, 1]
-roc_auc = roc_auc_score(y_test, y_prob_tree)
 conf_matrix_tree = confusion_matrix(y_test, y_pred_tree)
 
 metrics_df = pd.DataFrame({
-    "Metric": ["Accuracy", "F1 Score", "Precision", "Recall", "ROC AUC Score"],
-    "Value": [accuracy, f1, precision, recall, roc_auc]
+    "Metric": ["Accuracy"],
+    "Value": [accuracy_tree]
 })
 
 print(metrics_df)
@@ -1034,12 +994,14 @@ plt.ylabel("Actual")
 plt.title("Confusion Matrix for Decision Tree")
 plt.show()
 
+predicted_result = decision_tree.predict(new_data)
+predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 
-# In[68]:
+print("\nResponce:", predicted_result[0])
 
 
-import lightgbm as lgb
-from lightgbm import LGBMClassifier
+# In[ ]:
+
 
 # Create and train the LightGBM model
 lgb_model = LGBMClassifier()
@@ -1050,23 +1012,17 @@ y_pred_lgb = lgb_model.predict(X_test)
 
 # Calculate evaluation metrics for LightGBM
 accuracy_lgb = accuracy_score(y_test, y_pred_lgb)
-f1_lgb = f1_score(y_test, y_pred_lgb)
-precision_lgb = precision_score(y_test, y_pred_lgb)
-recall_lgb = recall_score(y_test, y_pred_lgb)
 
-# To calculate ROC AUC score, you need probability estimates, not just predictions
-y_prob_lgb = lgb_model.predict_proba(X_test)[:, 1]
-roc_auc_lgb = roc_auc_score(y_test, y_prob_lgb)
 
 # Create a confusion matrix for LightGBM
 conf_matrix_lgb = confusion_matrix(y_test, y_pred_lgb)
 
-# Create a results DataFrame for LightGBM
-results_lgb = pd.DataFrame([['LightGBM', accuracy_lgb, precision_lgb, recall_lgb, f1_lgb, roc_auc_lgb]],
-                            columns=['Model', 'Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC Score'])
+metrics_df = pd.DataFrame({
+    "Metric": ["Accuracy"],
+    "Value": [accuracy_lgb]
+})
 
-# Display the results for LightGBM
-print(results_lgb)
+print(metrics_df)
 
 # Display the confusion matrix for LightGBM
 plt.figure(figsize=(4, 3))
@@ -1076,59 +1032,10 @@ plt.ylabel("Actual")
 plt.title("Confusion Matrix (LightGBM)")
 plt.show()
 
+predicted_result = lgb_model.predict(new_data)
+predicted_result = ["yes" if val == 1 else "no" for val in predicted_result]
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+print("\nResponce:", predicted_result[0])
 
 
 # In[ ]:
