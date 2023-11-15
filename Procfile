@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run stream/BankTeleMarketingUI.py
+web: sh setup.sh && streamlit run Streamlit/BankTeleMarketingUI.py
