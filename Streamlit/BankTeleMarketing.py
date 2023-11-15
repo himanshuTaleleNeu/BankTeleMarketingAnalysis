@@ -13,7 +13,7 @@ data1 = 'https://raw.githubusercontent.com/himanshuTaleleNeu/BankTeleMarketingAn
 # data = pd.read_csv('/Users/himanshutalele/Desktop/Developer/BankTeleMarketingAnalysis/Streamlit/output_data.csv', delimiter=';')
 # df = pd.DataFrame(data)
 data = pd.read_csv(data1, delimiter=';')
-df = pd.DataFrame(csv)
+df = pd.DataFrame(data)
 
 # %%
 # columns to keep
