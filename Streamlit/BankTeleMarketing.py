@@ -9,10 +9,10 @@ from sklearn.metrics import accuracy_score
 #from IPython.display import display
 
 # %%
-data = 'https://raw.githubusercontent.com/himanshuTaleleNeu/BankTeleMarketingAnalysis/main/Streamlit/output_data.csv'
+data1 = 'https://raw.githubusercontent.com/himanshuTaleleNeu/BankTeleMarketingAnalysis/main/Streamlit/output_data.csv'
 # data = pd.read_csv('/Users/himanshutalele/Desktop/Developer/BankTeleMarketingAnalysis/Streamlit/output_data.csv', delimiter=';')
 # df = pd.DataFrame(data)
-csv = pd.read_csv(data, delimiter=';')
+data = pd.read_csv(data1, delimiter=';')
 df = pd.DataFrame(csv)
 
 # %%
