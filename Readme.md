@@ -3,6 +3,11 @@
 ## Introduction
 This ReadMe file provides a detailed guide for using a Python script to analyze and build predictive models for a bank marketing campaign dataset. The dataset contains information about the marketing campaign conducted by a bank and the responses of clients to subscribe to a term deposit.
 
+## Project Motivation
+Term deposits serve as a key revenue stream for banks, representing cash investments with fixed interest rates over a specified term. To promote these deposits, banks employ diverse outreach strategies, including telephonic marketing. Despite its effectiveness, telephonic campaigns require substantial resources. This project aims to predict client subscriptions to term deposits, enhancing the efficiency of telephonic marketing by targeting potential subscribers more strategically.
+
+Using data from phone-based marketing campaigns by a Portuguese bank, the project focuses on building a classification model. This model predicts whether a client will subscribe to a term deposit, empowering the bank to optimize telephonic efforts by prioritizing individuals with a higher likelihood of engagement.
+
 The key steps covered in this analysis include **Data Preprocessing, Exploratory Data Analysis (EDA), and Building Models** to predict whether a client will subscribe to a term deposit. The Python script utilizes various libraries, including pandas, numpy, scikit-learn, Pandas Profiling Logistic Regression, Naive Bayes, K-Nearest Neighbors (KNN), Random Forest, Decision Tree, and LightGBM. for data analysis and model building.
 
 ## Prerequisites
@@ -60,8 +65,103 @@ Evaluate the model performance by calculating accuracy and generating confusion 
 Make predictions for a new data point using the trained models and display the response.
 
 ## :spider_web:  Running the Script
-To run the Python script, execute the code cells one by one in a Jupyter Notebook or a compatible code editor. Ensure that you have the necessary libraries installed in your Python environment.
+To run the Python script, execute the code cells one by one in a Jupyter Notebook or a compatible code editor or if you are using Visual code then by using Terminal you can Navigate to the project directory followed with filename.py. Ensure that you have the necessary libraries installed in your Python environment.
+
+## :computer: Streamlit Installation Guide
+Streamlit is a powerful Python library for creating interactive web applications with minimal code. Follow these steps to install Streamlit and run the Bank TeleMarketing Analysis script as a web application:
+
+##### Step 1: Install Streamlit
+Open a terminal and run the following command to install Streamlit:
+
+```bash
+pip install streamlit
+```
+##### Step 2: Run the Streamlit App Locally
+Once Streamlit is installed, you can run the Streamlit app locally. Navigate to the project directory and run the following command:
+
+```bash
+streamlit run your_streamlit_script.py
+```
+##### Step 3: Access the Streamlit App in the Browser
+After running the above command, Streamlit will provide a local URL (usually http://localhost:8501). Open this URL in your web browser to access the Streamlit app and interact with the Bank TeleMarketing Analysis in a web-based interface.
+
+## :rocket: Heroku Deployment Process
+
+##### Step 1: Install Heroku CLI
+Make sure you have the Heroku Command Line Interface (CLI) installed or you can connect it through Github on Heruko Website. You can download it from the official Heroku website.
+
+Follow these steps to deploy the Bank TeleMarketing Analysis project on Heroku:
+
+##### Step 2: Login to Heroku
+Open a terminal and log in to your Heroku account using the following command:
+
+```bash
+heroku login
+```
+Follow the prompts to enter your Heroku credentials.
+
+##### Step 3: Initialize a Git Repository 
+If this project is not already a Git repository, initialize one using the following commands:
+
+```bash
+git init
+git add .
+git commit -m "BankTeleMarketing initial Commit"
+```
+
+##### Step 4: Create a Heroku App
+Run the following command to create a new Heroku app:
+
+```bash
+heroku create banktelemarketing
+```
+
+Replace banktelemarketing with a unique name for your Heroku app. Heroku will provide you with a URL for your deployed app (e.g., https://banktelemarketing-8d9b5661ea18.herokuapp.com/)
+
+
+##### Step 5: Create a Procfile
+Ensure that you have a Procfile in your project root directory. The Procfile specifies the commands that are executed by the app on startup. For a Python project, the Procfile might look like this:
+
+```bash
+web: sh setup.sh && streamlit run Streamlit/BankTeleMarketingUI.py
+```
+
+###### Here please replace BankTeleMarketingUI.py with the actual name of your main Streamlit UI or python script.
+
+##### Step 6: Create a requirements.txt file
+If you haven't already, generate a requirements.txt file that lists all the dependencies of your project. You can use the following command:
+
+```bash
+pip freeze > requirements.txt
+```
+You can refer the above requirements.txt
+
+##### Step 7: Commit Changes
+Commit the changes to your Git repository:
+
+```bash
+git add .
+git commit -m "Heroku deployment setup"
+```
+
+##### Step 8: Push to Heroku
+Push your code to the Heroku remote repository:
+
+```bash
+git push heroku master/main
+```
+
+##### Step 9: Open the App
+After the deployment is successful, open your app in the browser using:
+
+```bash
+heroku open
+```
 
 ## Conclusion
 
-This script provides a comprehensive analysis of the bank marketing campaign dataset, including data preprocessing, EDA, and binary classification model building. By following the instructions in this ReadMe, you can explore and analyze the dataset, train different classification models, and make predictions based on new data.
+This script provides a comprehensive analysis of the bank marketing campaign dataset, encompassing crucial steps such as data preprocessing, exploratory data analysis (EDA), and binary classification model building. By following the instructions in this ReadMe, you can thoroughly explore and analyze the dataset, train diverse classification models, and make predictions based on new data.
+
+Additionally, the project has been successfully deployed on Heroku, allowing users to access and interact with the analysis through a web interface. The deployment process involves setting up the Heroku environment, creating a Heroku app, and pushing the project code to the Heroku remote repository. Whether you are a contributor looking to enhance the project or a user interested in exploring the analysis, the Heroku deployment ensures easy access and usage. The deployed application can be accessed through the provided Heroku app URL.
+
+Feel free to fork the repository, contribute to the project, or simply deploy it for your use. Happy exploring and modeling!
