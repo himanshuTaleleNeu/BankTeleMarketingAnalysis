@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-from IPython.display import display
+#from IPython.display import display
 
 # %%
 data = pd.read_csv('/Users/himanshutalele/Desktop/Self/Bank_Campaign_Data/output_data.csv', delimiter=';')
