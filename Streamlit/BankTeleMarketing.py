@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 #from IPython.display import display
 
 # %%
-data = pd.read_csv('/Users/himanshutalele/Desktop/Self/Bank_Campaign_Data/output_data.csv', delimiter=';')
+data = pd.read_csv('/Users/himanshutalele/Desktop/Developer/Bank_Campaign_Data/output_data.csv', delimiter=';')
 df = pd.DataFrame(data)
 
 # %%
